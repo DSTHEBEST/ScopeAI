@@ -25,18 +25,35 @@ def parse_python_file(file_path):
 
     for node in ast.walk(tree):
 
-        if isinstance(node, ast.FunctionDef):
-            functions.append(node.name)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+
+            func_code = ast.get_source_segment(code, node)
+
+            functions.append({
+                "name": node.name,
+                "lineno": node.lineno,
+                "docstring": ast.get_docstring(node),
+                "code": func_code
+            })
 
         elif isinstance(node, ast.ClassDef):
-            classes.append(node.name)
+
+            class_code = ast.get_source_segment(code, node)
+
+            classes.append({
+                "name": node.name,
+                "lineno": node.lineno,
+                "docstring": ast.get_docstring(node),
+                "code": class_code
+            })
 
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 imports.append(alias.name)
 
         elif isinstance(node, ast.ImportFrom):
-            imports.append(node.module)
+            if node.module:
+                imports.append(node.module)
 
     return {
         "type": "python",
@@ -59,7 +76,7 @@ def parse_text_file(file_path):
 
 def parse_repository(repo_path):
 
-    parsed_files = []
+    chunks = []
 
     IGNORED_DIRS = {"venv", ".git", "__pycache__", "node_modules", "dist", "build"}
 
@@ -73,14 +90,34 @@ def parse_repository(repo_path):
 
                 file_path = os.path.join(root, file)
 
+                # Handle Python files
                 if file.endswith(".py"):
-                    parsed_data = parse_python_file(file_path)
+
+                    parsed = parse_python_file(file_path)
+
+                    for func in parsed["functions"]:
+                        chunks.append({
+                            "type": "function",
+                            "file": file_path,
+                            **func
+                        })
+
+                    for cls in parsed["classes"]:
+                        chunks.append({
+                            "type": "class",
+                            "file": file_path,
+                            **cls
+                        })
+
+                # Handle text files
                 else:
-                    parsed_data = parse_text_file(file_path)
 
-                parsed_files.append({
-                    "file": file_path,
-                    "data": parsed_data
-                })
+                    text_data = parse_text_file(file_path)
 
-    return parsed_files
+                    chunks.append({
+                        "type": "document",
+                        "file": file_path,
+                        "content": text_data["content"]
+                    })
+
+    return chunks
