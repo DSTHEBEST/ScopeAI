@@ -1,7 +1,15 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function App() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    };
+  }, []);
   return (
     <div className="{`dark ${'font-sans antialiased overflow-x-hidden selection:bg-brand selection:text-white'} w-full min-h-screen relative`}">
       {/* Film grain overlay */}
@@ -24,14 +32,15 @@ export default function App() {
           ScopeAI
         </div>
         <div className="hidden md:flex space-x-8 text-xs uppercase tracking-widest text-gray-400">
-          <a className="hover:text-brand transition-colors" href="#">Documentation</a>
-          <a className="hover:text-brand transition-colors" href="#">Architecture</a>
-          <a className="hover:text-brand transition-colors" href="#">Security</a>
+          <a className="hover:text-brand transition-colors" href="#documentation">Documentation</a>
+          <a className="hover:text-brand transition-colors" href="#architecture">Architecture</a>
+          <a className="hover:text-brand transition-colors" href="#security">Security</a>
         </div>
       </nav>
       {/*  END: Navigation  */}
       {/*  BEGIN: Main Content  */}
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-[85vh] text-center px-4">
+      <div className="relative z-10 w-full">
+        <main className="flex flex-col items-center justify-center min-h-[calc(100vh-100px)] text-center px-4 pt-4">
         {/*  BEGIN: Hero Section  */}
         <section className="max-w-4xl mx-auto" data-purpose="hero-content">
           <div className="inline-block px-3 py-1 mb-6 border border-brand/30 bg-brand/5 text-[10px] uppercase tracking-[0.3em] text-brand rounded-custom">
@@ -49,7 +58,7 @@ export default function App() {
               Ingest Repository
             </button>
             {/*  Secondary Action  */}
-            <a className="text-gray-500 uppercase tracking-widest text-[10px] hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#features">
+            <a className="text-gray-500 uppercase tracking-widest text-[10px] hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#how-it-works">
               How it works
             </a>
           </div>
@@ -65,7 +74,137 @@ export default function App() {
           </div>
         </div>
         {/*  END: Data Visualizer  */}
-      </main>
+        </main>
+        {/*  BEGIN: Content Sections  */}
+        <div className="w-full max-w-5xl mx-auto flex flex-col gap-32 py-32 text-left px-8 border-t border-brand/10 mt-32">
+          <section id="how-it-works" className="scroll-mt-32">
+            <h2 className="text-3xl font-bold text-white mb-6"><span className="text-brand">01 //</span> HOW IT WORKS</h2>
+            <p className="text-gray-400 leading-relaxed max-w-3xl md:text-lg">
+              ScopeAI works by ingesting your entire GitHub repository and chunking the codebase using advanced AST (Abstract Syntax Tree) parsing. It then generates high-dimensional vector embeddings for each code snippet. When you query the system, it uses RAG (Retrieval-Augmented Generation) coupled with Llama 3.3 to fetch the most relevant context and generate precise, actionable insights.
+            </p>
+          </section>
+
+          <section id="documentation" className="scroll-mt-32">
+            <h2 className="text-3xl font-bold text-white mb-6"><span className="text-brand">02 //</span> DOCUMENTATION</h2>
+            <p className="text-gray-400 leading-relaxed max-w-3xl md:text-lg mb-6">
+              Comprehensive guides to get you started with ScopeAI:
+            </p>
+            <ul className="list-disc list-inside text-gray-400 space-y-4 md:text-lg">
+              <li><strong className="text-white">Quick Start:</strong> Connect your GitHub account and ingest your first repo.</li>
+              <li><strong className="text-white">Query Language:</strong> Learn how to ask complex architectural questions.</li>
+              <li><strong className="text-white">API Reference:</strong> Integrate ScopeAI directly into your CI/CD pipelines.</li>
+            </ul>
+          </section>
+
+          <section id="architecture" className="scroll-mt-32 w-full">
+            <h2 className="text-3xl font-bold text-white mb-6"><span className="text-brand">03 //</span> ARCHITECTURE</h2>
+            <p className="text-gray-400 leading-relaxed max-w-3xl md:text-lg">
+              Built for speed and scale. The frontend is a high-performance React application styled with Tailwind CSS. Our backend is powered by FastAPI, featuring asynchronous processing for repository ingestion. The AI inference engine runs on Groq's LPU (Language Processing Unit), delivering unparalleled token generation speeds.
+            </p>
+
+            {/*  BEGIN: Flowchart  */}
+            <div className="mt-16 w-full max-w-4xl bg-black/30 p-8 rounded-2xl border border-white/5 flex flex-col items-center relative font-sans">
+              
+              {/* Step 1 */}
+              <div className="w-full bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative z-10 hover:border-[#b38a23] transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">1</div>
+                <h3 className="font-bold text-lg mb-1 text-[#b38a23]">1 · Repository ingestion</h3>
+                <p className="text-white/70 text-sm">Clone repo → parse .py with AST · parse .json / .yaml as text · repo deleted after parsing</p>
+              </div>
+              
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 2 */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                <div className="bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative hover:border-[#b38a23] transition-colors flex flex-col justify-center">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">2</div>
+                  <h3 className="font-bold text-md mb-1 text-[#b38a23]">AST analysis — .py files</h3>
+                  <p className="text-white/70 text-xs">Imports · functions · classes · structure</p>
+                </div>
+                <div className="bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative hover:border-[#b38a23] transition-colors flex flex-col justify-center">
+                  <h3 className="font-bold text-md mb-1 text-[#b38a23]">Text parsing — .json / .yaml</h3>
+                  <p className="text-white/70 text-xs">Config context · key-value semantics</p>
+                </div>
+              </div>
+
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 3 */}
+              <div className="w-full bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative z-10 hover:border-[#b38a23] transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">3</div>
+                <h3 className="font-bold text-lg mb-1 text-[#b38a23]">3 · Hybrid chunk strategy</h3>
+                <p className="text-white/70 text-sm">Syntactic boundaries (imports · functions · classes) + max 500 tokens per chunk</p>
+              </div>
+
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 4 */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                <div className="bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] hover:border-[#b38a23] transition-colors relative flex flex-col justify-center">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden lg:block">4</div>
+                  <h3 className="font-bold text-md mb-1 text-[#b38a23]">Import chunks</h3>
+                  <p className="text-white/70 text-xs">Dependency context</p>
+                </div>
+                <div className="bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] hover:border-[#b38a23] transition-colors flex flex-col justify-center">
+                  <h3 className="font-bold text-md mb-1 text-[#b38a23]">Function chunks</h3>
+                  <p className="text-white/70 text-xs">Logic units</p>
+                </div>
+                <div className="bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] hover:border-[#b38a23] transition-colors flex flex-col justify-center">
+                  <h3 className="font-bold text-md mb-1 text-[#b38a23]">Class chunks</h3>
+                  <p className="text-white/70 text-xs">OOP structure</p>
+                </div>
+              </div>
+
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 5 */}
+              <div className="w-full bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative z-10 hover:border-[#b38a23] transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">5</div>
+                <h3 className="font-bold text-lg mb-1 text-[#b38a23]">5 · Embedding — MiniLM-L6-v2</h3>
+                <p className="text-white/70 text-sm">Each chunk → 384-dimension vector · model loaded once at service start, not per request</p>
+              </div>
+
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 6 */}
+              <div className="w-full bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative z-10 hover:border-[#b38a23] transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">6</div>
+                <h3 className="font-bold text-lg mb-1 text-[#b38a23]">6 · ChromaDB storage</h3>
+                <p className="text-white/70 text-sm">token ID · 384-dim vector embedding<br/>metadata: file name · file type</p>
+              </div>
+
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 7 */}
+              <div className="w-full bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative z-10 hover:border-[#b38a23] transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">7</div>
+                <h3 className="font-bold text-lg mb-1 text-[#b38a23]">7 · Query — HNSW similarity search</h3>
+                <p className="text-white/70 text-sm">Query embedded → HNSW graph traversal → nearest vectors returned</p>
+              </div>
+
+              <svg className="w-6 h-6 text-[#3d3421] my-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+
+              {/* Step 8 */}
+              <div className="w-full bg-[#121212] text-white rounded-md p-5 text-center shadow-lg border border-[#3d3421] relative z-10 hover:border-[#b38a23] transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b38a23]/30 text-xs font-mono hidden sm:block">8</div>
+                <h3 className="font-bold text-lg mb-1 text-[#b38a23]">8 · Retrieved context</h3>
+                <p className="text-white/70 text-sm">Top-k semantically similar chunks surfaced · no raw files ever stored</p>
+              </div>
+
+            </div>
+            {/*  END: Flowchart  */}
+
+          </section>
+
+          <section id="security" className="scroll-mt-32">
+            <h2 className="text-3xl font-bold text-white mb-6"><span className="text-brand">04 //</span> SECURITY</h2>
+            <p className="text-gray-400 leading-relaxed max-w-3xl md:text-lg">
+              Your code is your most valuable asset. ScopeAI employs enterprise-grade security protocols. Repositories are cloned ephemerally, processed in secure, isolated containers, and immediately purged after vector embeddings are generated. We do not use your proprietary code to train our foundation models.
+            </p>
+          </section>
+        </div>
+        {/*  END: Content Sections  */}
+      </div>
       {/*  END: Main Content  */}
       {/*  BEGIN: Footer  */}
       <footer className="relative z-10 py-12 px-8 border-t border-white/5 bg-black/50 backdrop-blur-md">

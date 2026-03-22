@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
 type ChatSession = {
@@ -10,7 +10,7 @@ type ChatSession = {
 };
 
 export default function Analysis() {
-  const navigate = useNavigate();
+
   const location = useLocation();
   const files: string[] = location.state?.files || [];
 
@@ -145,7 +145,6 @@ export default function Analysis() {
           ></div>
           <div className="p-4 border-b border-[#3d3421] flex items-center justify-between text-[#b38a23] text-sm font-bold tracking-wider">
             <span>FILE EXPLORER</span>
-            <span onClick={() => { const id = Date.now().toString(); setSessions(prev => [...prev, { id, title: 'New Chat', chatLog: [], codeChunks: [] }]); setActiveSessionId(id); }} className="text-lg leading-none cursor-pointer hover:text-white transition-colors" title="Start New Chat">+</span>
           </div>
           <div className="p-4 flex flex-col gap-4 overflow-y-auto hidden-scrollbar">
             {files.length > 0 ? (
@@ -211,12 +210,16 @@ export default function Analysis() {
                     )}
                   </button>
                 ))}
+                <button
+                  onClick={() => { const id = Date.now().toString(); setSessions(prev => [...prev, { id, title: 'New Chat', chatLog: [], codeChunks: [] }]); setActiveSessionId(id); }}
+                  className="px-2 py-1 flex items-center justify-center text-[#9ca3af] hover:text-white border border-[#3d3421] hover:border-[#b38a23] bg-[#0a0a0a] rounded-sm transition-colors shrink-0"
+                  title="Start New Chat"
+                >
+                  <span className="text-sm leading-none">+</span>
+                </button>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => navigate('/code-explorer')} className="px-3 py-1 border border-[#3d3421] text-[#b38a23] text-xs hover:border-[#b38a23] transition-colors rounded-sm uppercase bg-[#1a1a1a]">
-                Code Explorer
-              </button>
               <button onClick={() => { setChatLog([]); setCodeChunks([]); }} className="px-3 py-1 border border-[#3d3421] text-[#b38a23] text-xs hover:border-[#b38a23] transition-colors rounded-sm uppercase">
                 Reset Session
               </button>
