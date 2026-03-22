@@ -1,7 +1,10 @@
 import subprocess
 import os
 
-REPO_DIR = "repos"
+# Dynamically resolve repos directory
+backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+REPO_DIR = os.path.join(backend_dir, "repos")
+os.makedirs(REPO_DIR, exist_ok=True)
 
 def clone_repository(repo_url: str):
 

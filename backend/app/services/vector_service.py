@@ -2,8 +2,13 @@ import chromadb
 from chromadb.config import Settings
 
 import chromadb
+import os
 
-client = chromadb.PersistentClient(path=r"C:\Users\Devansh\ScopeAI\backend\chroma_db")
+# Dynamically resolve backend directory to store chroma_db securely in Docker
+backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+db_path = os.path.join(backend_dir, "chroma_db")
+
+client = chromadb.PersistentClient(path=db_path)
 
 collection = client.get_or_create_collection(name="code_chunks")
 
