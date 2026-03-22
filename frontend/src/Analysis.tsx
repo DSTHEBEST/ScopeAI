@@ -149,7 +149,7 @@ export default function Analysis() {
           <div className="p-4 flex flex-col gap-4 overflow-y-auto hidden-scrollbar">
             {files.length > 0 ? (
               <>
-                {files.slice(0, visibleFilesCount).map((file, i) => (
+                {files.slice(0, visibleFilesCount).map((file) => (
                   <div key={file} className="bg-[#1a1a1a] rounded-sm p-3 border border-[#3d3421] shrink-0">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-3 h-4 bg-[#b38a23] rounded-sm opacity-80 shrink-0"></div>
